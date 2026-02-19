@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Demonstração API Gateway</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; background: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; margin-bottom: 20px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h1>Consumindo o API Gateway</h1>
+    <button onclick="buscarDados()">Buscar Detalhes do Jogo</button>
+
+    <div id="resultado" class="card hidden">
+        <h2 id="nome-jogo"></h2>
+        <p><strong>Categoria:</strong> <span id="categoria"></span></p>
+        <p><strong>Preço:</strong> R$ <span id="preco"></span></p>
+        <hr>
+        <small style="color: gray;">Origem: Resposta Unificada do Gateway</small>
+    </div>
+
+    <script>
+        async function buscarDados() {
+            try {
+                // Chama o seu API Gateway na porta 5000
+                const resposta = await fetch('http://127.0.0.1:5000/produto/1');
+                const dados = await resposta.json();
+
+                // Preenche o HTML com os dados agregados pelo Gateway
+                document.getElementById('nome-jogo').innerText = dados.produto;
+                document.getElementById('categoria').innerText = dados.categoria;
+                document.getElementById('preco').innerText = dados.valor;
+
+                // Mostra o card
+                document.getElementById('resultado').classList.remove('hidden');
+            } catch (erro) {
+                alert("Erro ao conectar com o API Gateway. Certifique-se que o script Python está rodando!");
+            }
+        }
+    </script>
+</body>
+</html>
