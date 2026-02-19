@@ -1,0 +1,5 @@
+{
+    "1": {"nome": "Minecraft", "categoria": "Sandbox", "developer": "Mojang"},
+    "2": {"nome": "League of Legends", "categoria": "MOBA", "developer": "Riot Games"},
+    "3": {"nome": "Valorant", "categoria": "FPS", "developer": "Riot Games"}
+}

@@ -1,0 +1,5 @@
+{
+    "1": {"preco": 99.90, "moeda": "BRL", "estoque": true},
+    "2": {"preco": 0.00, "moeda": "BRL", "estoque": true},
+    "3": {"preco": 0.00, "moeda": "BRL", "estoque": true}
+}

@@ -2,43 +2,64 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demonstração API Gateway</title>
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; background: #f4f4f9; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
-        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px; background: #eef2f7; color: #333; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        input { padding: 10px; width: 60px; border: 1px solid #ccc; border-radius: 5px; margin-right: 10px; text-align: center; }
+        button { padding: 10px 20px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #218838; }
+        .card { margin-top: 25px; padding: 15px; border-top: 2px solid #eee; text-align: left; animation: fadeIn 0.5s; }
         .hidden { display: none; }
+        .label { font-weight: bold; color: #555; }
+        .price { font-size: 1.2em; color: #d9534f; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <h1>Consumindo o API Gateway</h1>
-    <button onclick="buscarDados()">Buscar Detalhes do Jogo</button>
+    <div class="container">
+        <h1>Loja de Games</h1>
+        <p>Insira o ID do Jogo (1, 2 ou 3):</p>
+        
+        <input type="number" id="jogoId" value="1" min="1" max="3">
+        <button onclick="buscarDados()">Consultar Gateway</button>
 
-    <div id="resultado" class="card hidden">
-        <h2 id="nome-jogo"></h2>
-        <p><strong>Categoria:</strong> <span id="categoria"></span></p>
-        <p><strong>Preço:</strong> R$ <span id="preco"></span></p>
-        <hr>
-        <small style="color: gray;">Origem: Resposta Unificada do Gateway</small>
+        <div id="resultado" class="card hidden">
+            <h2 id="nome-jogo" style="margin-top: 0;"></h2>
+            <p><span class="label">Categoria:</span> <span id="categoria"></span></p>
+            <p><span class="label">Preço:</span> <span class="price">R$ <span id="preco"></span></span></p>
+            <p><span class="label">Estoque:</span> <span id="estoque"></span></p>
+            <small style="color: #999; display: block; margin-top: 15px;">
+                ⚙️ Status: Dados agregados com sucesso via API Gateway.
+            </small>
+        </div>
     </div>
 
     <script>
         async function buscarDados() {
+            const id = document.getElementById('jogoId').value;
+            const resultadoDiv = document.getElementById('resultado');
+
             try {
-                // Chama o seu API Gateway na porta 5000
-                const resposta = await fetch('http://127.0.0.1:5000/produto/1');
+                // O HTML faz APENAS UMA requisição para o Gateway
+                const resposta = await fetch(`http://127.0.0.1:5000/produto/${id}`);
+                
+                if (!resposta.ok) throw new Error("Jogo não encontrado");
+
                 const dados = await resposta.json();
 
-                // Preenche o HTML com os dados agregados pelo Gateway
+                // Preenche a interface com a resposta composta pelo Gateway
                 document.getElementById('nome-jogo').innerText = dados.produto;
                 document.getElementById('categoria').innerText = dados.categoria;
-                document.getElementById('preco').innerText = dados.valor;
+                document.getElementById('preco').innerText = dados.valor.toFixed(2);
+                document.getElementById('estoque').innerText = dados.em_estoque ? "✅ Disponível" : "❌ Esgotado";
 
-                // Mostra o card
-                document.getElementById('resultado').classList.remove('hidden');
+                resultadoDiv.classList.remove('hidden');
             } catch (erro) {
-                alert("Erro ao conectar com o API Gateway. Certifique-se que o script Python está rodando!");
+                alert("Erro: O ID informado não existe ou o Gateway está offline.");
+                resultadoDiv.classList.add('hidden');
             }
         }
     </script>
