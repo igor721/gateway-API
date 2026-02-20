@@ -43,14 +43,12 @@
             const resultadoDiv = document.getElementById('resultado');
 
             try {
-                // O HTML faz APENAS UMA requisição para o Gateway
                 const resposta = await fetch(`http://127.0.0.1:5000/produto/${id}`);
                 
                 if (!resposta.ok) throw new Error("Jogo não encontrado");
 
                 const dados = await resposta.json();
 
-                // Preenche a interface com a resposta composta pelo Gateway
                 document.getElementById('nome-jogo').innerText = dados.produto;
                 document.getElementById('categoria').innerText = dados.categoria;
                 document.getElementById('preco').innerText = dados.valor.toFixed(2);
