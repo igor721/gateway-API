@@ -9,7 +9,7 @@ CORS(app)
 
 @app.route('/servico-catalogo/<id>')
 def get_catalogo(id):
-    with open('./catalogo.json', 'r', encoding='utf-8') as f:
+    with open('json/catalogo.json', 'r', encoding='utf-8') as f:
         dados = json.load(f)
     # Busca o ID no JSON ou retorna erro se não existir
     jogo = dados.get(id)
@@ -17,7 +17,7 @@ def get_catalogo(id):
 
 @app.route('/servico-precos/<id>')
 def get_precos(id):
-    with open('./precos.json', 'r', encoding='utf-8') as f:
+    with open('json/precos.json', 'r', encoding='utf-8') as f:
         dados = json.load(f)
     preco = dados.get(id)
     return jsonify(preco) if preco else (jsonify({"erro": "Preço não encontrado"}), 404)
